@@ -145,7 +145,7 @@
 #define SDL_IPHONE_KEYBOARD 1
 
 /* enable iOS extended launch screen */
-#define SDL_IPHONE_LAUNCHSCREEN 1
+#define SDL_IPHONE_LAUNCHSCREEN 0
 
 /* Set max recognized G-force from accelerometer
    See src/joystick/uikit/SDL_sysjoystick.m for notes on why this is needed

@@ -57,7 +57,7 @@ main(int argc, char *argv[])
     srand(time(NULL));
 
     /* create window and renderer */
-    window = SDL_CreateWindow(NULL, 0, 0, 320, 480, SDL_WINDOW_ALLOW_HIGHDPI);
+    window = SDL_CreateWindow(NULL, 0, 0, 320, 320, SDL_WINDOW_ALLOW_HIGHDPI);
     if (window == 0) {
         fatalError("Could not initialize Window");
     }
