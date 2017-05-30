@@ -85,6 +85,9 @@ extern DECLSPEC int SDLCALL SDL_iPhoneSetAnimationCallback(SDL_Window * window, 
 #define SDL_iOSSetEventPump(enabled) SDL_iPhoneSetEventPump(enabled)
 extern DECLSPEC void SDLCALL SDL_iPhoneSetEventPump(SDL_bool enabled);
 
+#define SDL_iOSSetRootViewController(viewcontroller) SDL_iPhoneSetRootViewController(viewcontroller)
+extern DECLSPEC void SDLCALL SDL_iPhoneSetRootViewController(void *viewcontroller);
+
 #endif /* __IPHONEOS__ */
 
 

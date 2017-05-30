@@ -63,7 +63,7 @@
 
 - (void)layoutSubviews;
 
-@property (nonatomic, strong) UIScreen *screen;
+@property (nonatomic, assign) CGRect screenBounds;
 
 @end
 
@@ -73,7 +73,7 @@
 {
     /* Workaround to fix window orientation issues in iOS 8+. */
     // TODO: default UIWindow screen is [UIScreen mainScreen], set it will make UIWindow change size to fullscreen.
-    self.frame = self.screen.bounds;
+    self.frame = self.screenBounds;
     [super layoutSubviews];
 }
 
@@ -90,7 +90,7 @@ static int SetupWindowData(_THIS, SDL_Window *window, UIWindow *uiwindow, SDL_bo
 //    CGRect frame = UIKit_ComputeViewFrame(window, displaydata.uiscreen);
 //    int width  = (int) frame.size.width;
 //    int height = (int) frame.size.height;
-    CGRect frame = CGRectMake(window->x, window->y, window->w, window->h);
+    CGRect frame = uiwindow.bounds;
     int width  = (int) window->w;
     int height = (int) window->h;
 
@@ -211,11 +211,13 @@ UIKit_CreateWindow(_THIS, SDL_Window *window)
         /* !!! FIXME: can we have a smaller view? */
         CGRect frame = CGRectMake(window->x, window->y, window->w, window->h);
         
-        UIWindow *uiwindow = [[SDL_uikitwindow alloc] initWithFrame:frame];
-
+        SDL_uikitwindow *uiwindow = [[SDL_uikitwindow alloc] initWithFrame:frame];
+        uiwindow.screenBounds = frame;
+        
         /* put the window on an external display if appropriate. */
         if (data.uiscreen != [UIScreen mainScreen]) {
-            [uiwindow setScreen:data.uiscreen];
+//            [uiwindow setScreen:data.uiscreen];
+            uiwindow.screenBounds = data.uiscreen.bounds;
         }
 
         if (SetupWindowData(_this, window, uiwindow, SDL_TRUE) < 0) {
@@ -387,7 +389,7 @@ UIKit_GetSupportedOrientations(SDL_Window * window)
     @autoreleasepool {
         SDL_WindowData *data = (__bridge SDL_WindowData *) window->driverdata;
         UIApplication *app = [UIApplication sharedApplication];
-
+        
         /* Get all possible valid orientations. If the app delegate doesn't tell
          * us, we get the orientations from Info.plist via UIApplication. */
         if ([app.delegate respondsToSelector:@selector(application:supportedInterfaceOrientationsForWindow:)]) {
@@ -459,6 +461,12 @@ SDL_iPhoneSetAnimationCallback(SDL_Window * window, int interval, void (*callbac
     }
 
     return 0;
+}
+
+void
+SDL_iPhoneSetRootViewController(UIViewController *viewcontroller)
+{
+    
 }
 
 #endif /* SDL_VIDEO_DRIVER_UIKIT */
