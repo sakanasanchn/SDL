@@ -29,7 +29,7 @@
 
 @end
 
-@interface SDLUIKitDelegate : NSObject<UIApplicationDelegate>
+@interface SDLUIKitDelegate : NSObject
 
 + (id)sharedAppDelegate;
 + (NSString *)getAppDelegateClassName;

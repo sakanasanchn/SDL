@@ -308,7 +308,7 @@ SDL_LoadLaunchImageNamed(NSString *name, int screenh)
     self = [super init];
     if (self) {
         [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(application:didFinishLaunchingWithOptions:)
+                                                 selector:@selector(applicationDidFinishLaunching)
                                                      name:UIApplicationDidFinishLaunchingNotification
                                                    object:nil];
         
@@ -392,7 +392,7 @@ SDL_LoadLaunchImageNamed(NSString *name, int screenh)
     /* exit(exit_status); */
 }
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+- (void)applicationDidFinishLaunching
 {
     NSBundle *bundle = [NSBundle mainBundle];
 
@@ -454,7 +454,7 @@ SDL_LoadLaunchImageNamed(NSString *name, int screenh)
     // Not need call finish launch. This will not right.
 //    [self performSelector:@selector(postFinishLaunch) withObject:nil afterDelay:0.0];
 
-    return YES;
+    return;
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application

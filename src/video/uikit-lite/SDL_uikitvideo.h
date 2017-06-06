@@ -33,7 +33,7 @@
 
 @end
 
-CGRect UIKit_ComputeViewFrame(SDL_Window *window, UIScreen *screen);
+CGRect UIKit_ComputeViewFrame(SDL_Window *window, CGRect screenBounds);
 
 #endif /* __OBJC__ */
 

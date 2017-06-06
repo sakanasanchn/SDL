@@ -41,9 +41,20 @@ extern NSUInteger UIKit_GetSupportedOrientations(SDL_Window * window);
 
 @class UIWindow;
 
+/* Change base class from UIWindow to UIView make it more simple to use */
+@interface SDL_uikitwindow : UIView
+
+- (void)layoutSubviews;
+
+@property(nonatomic,strong) UIScreen *screen;
+@property (nonatomic, assign) CGRect screenBounds;
+@property (nonatomic, strong) UIViewController *rootViewController;
+
+@end
+
 @interface SDL_WindowData : NSObject
 
-@property (nonatomic, strong) UIWindow *uiwindow;
+@property (nonatomic, strong) SDL_uikitwindow *uiwindow;
 @property (nonatomic, strong) SDL_uikitviewcontroller *viewcontroller;
 
 /* Array of SDL_uikitviews owned by this window. */

@@ -58,14 +58,7 @@
 }
 
 @end
-/* Change base class from UIWindow to UIView make it more simple to use */
-@interface SDL_uikitwindow : UIView
 
-- (void)layoutSubviews;
-
-@property (nonatomic, assign) CGRect screenBounds;
-
-@end
 
 @implementation SDL_uikitwindow
 
@@ -79,8 +72,10 @@
 
 @end
 
+/* static global root ViewController for UIKit lite init */
+static UIViewController *rootViewController = NULL;
 
-static int SetupWindowData(_THIS, SDL_Window *window, UIWindow *uiwindow, SDL_bool created)
+static int SetupWindowData(_THIS, SDL_Window *window, SDL_uikitwindow *uiwindow, SDL_bool created)
 {
     SDL_VideoDisplay *display = SDL_GetDisplayForWindow(window);
     SDL_DisplayData *displaydata = (__bridge SDL_DisplayData *) display->driverdata;
@@ -134,6 +129,13 @@ static int SetupWindowData(_THIS, SDL_Window *window, UIWindow *uiwindow, SDL_bo
 
     /* The View Controller will handle rotating the view when the device
      * orientation changes. This will trigger resize events, if appropriate. */
+    if (rootViewController == NULL) {
+        NSLog(@"Must Init root ViewController through SDL_iPhoneSetRootViewController befor call SDL_init!");
+        assert(rootViewController);
+    }
+    
+    uiwindow.rootViewController = rootViewController;
+    
     data.viewcontroller = [[SDL_uikitviewcontroller alloc] initWithSDLWindow:window];
 
     /* The window will initially contain a generic view so resizes, touch events,
@@ -213,6 +215,7 @@ UIKit_CreateWindow(_THIS, SDL_Window *window)
         
         SDL_uikitwindow *uiwindow = [[SDL_uikitwindow alloc] initWithFrame:frame];
         uiwindow.screenBounds = frame;
+        uiwindow.screen = data.uiscreen;
         
         /* put the window on an external display if appropriate. */
         if (data.uiscreen != [UIScreen mainScreen]) {
@@ -242,7 +245,7 @@ UIKit_ShowWindow(_THIS, SDL_Window * window)
 {
     @autoreleasepool {
         SDL_WindowData *data = (__bridge SDL_WindowData *) window->driverdata;
-        [data.uiwindow makeKeyAndVisible];
+        [data.uiwindow.rootViewController.view layoutIfNeeded];
     }
 }
 
@@ -286,7 +289,7 @@ UIKit_UpdateWindowBorder(_THIS, SDL_Window * window)
     }
 
     /* Update the view's frame to account for the status bar change. */
-    viewcontroller.view.frame = UIKit_ComputeViewFrame(window, data.uiwindow.screen);
+    viewcontroller.view.frame = UIKit_ComputeViewFrame(window, data.uiwindow.screenBounds);
 #endif /* !TARGET_OS_TV */
 
 #ifdef SDL_IPHONE_KEYBOARD
@@ -466,7 +469,14 @@ SDL_iPhoneSetAnimationCallback(SDL_Window * window, int interval, void (*callbac
 void
 SDL_iPhoneSetRootViewController(UIViewController *viewcontroller)
 {
-    
+    @autoreleasepool {
+        if (rootViewController) {
+            rootViewController = (UIViewController *) CFBridgingRelease((__bridge void*)rootViewController);
+            rootViewController = nil;
+        }
+        rootViewController = (__bridge UIViewController *) CFBridgingRetain(viewcontroller);;
+    }
+
 }
 
 #endif /* SDL_VIDEO_DRIVER_UIKIT */

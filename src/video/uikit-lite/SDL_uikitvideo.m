@@ -174,20 +174,20 @@ UIKit_IsSystemVersionAtLeast(double version)
 }
 
 CGRect
-UIKit_ComputeViewFrame(SDL_Window *window, UIScreen *screen)
+UIKit_ComputeViewFrame(SDL_Window *window, CGRect screenBounds)
 {
-#if !TARGET_OS_TV && (__IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_7_0)
-    BOOL hasiOS7 = UIKit_IsSystemVersionAtLeast(7.0);
-
-    if (hasiOS7 || (window->flags & (SDL_WINDOW_BORDERLESS|SDL_WINDOW_FULLSCREEN))) {
-        /* The view should always show behind the status bar in iOS 7+. */
-        return screen.bounds;
-    } else {
-        return screen.applicationFrame;
-    }
-#else
-    return screen.bounds;
-#endif
+//#if !TARGET_OS_TV && (__IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_7_0)
+//    BOOL hasiOS7 = UIKit_IsSystemVersionAtLeast(7.0);
+//
+//    if (hasiOS7 || (window->flags & (SDL_WINDOW_BORDERLESS|SDL_WINDOW_FULLSCREEN))) {
+//        /* The view should always show behind the status bar in iOS 7+. */
+//        return screen.bounds;
+//    } else {
+//        return screen.applicationFrame;
+//    }
+//#else
+    return screenBounds;
+//#endif
 }
 
 /*

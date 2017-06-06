@@ -259,7 +259,7 @@ SDL_AppleTVControllerUIHintChanged(void *userdata, const char *name, const char 
 {
     CGAffineTransform t = self.view.transform;
     CGPoint offset = CGPointMake(0.0, 0.0);
-    CGRect frame = UIKit_ComputeViewFrame(window, self.view.window.screen);
+    CGRect frame = UIKit_ComputeViewFrame(window, ((SDL_uikitwindow*)self.view.window).screenBounds);
 
     if (self.keyboardHeight) {
         int rectbottom = self.textInputRect.y + self.textInputRect.h;
